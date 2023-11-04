@@ -1,0 +1,4 @@
+Welcome to XYZ Corp's Policies section.
+- HR Policy: Our company allows remote work based on roles and approval from managers.
+- Data Security: We follow strict data security protocols to protect our information.
+- Code of Conduct: Employees are expected to maintain professional behavior and adhere to company policies.
