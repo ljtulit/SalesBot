@@ -6,122 +6,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chatbot Demo</title>
     <link rel="stylesheet" href="styles.css">
-
-
-    <script>
-        async function* streamGenerator(response) {
-            const reader = response.body.getReader();
-            let { value: chunk, done: readerDone } = await reader.read();
-            chunk = chunk ? new TextDecoder("utf-8").decode(chunk) : "";
-
-            let reassembledString = "";
-
-            while (!readerDone) {
-                const re = /\n|\r|\r\n/; // Regular expression to match new line characters
-                let result = chunk.match(re);
-
-                while (result) {
-                    reassembledString += chunk.substring(0, result.index);
-                    // Try to parse the JSON
-                    try {
-                        const json = JSON.parse(reassembledString);
-                        if (json.response) {
-                            yield json.response; // Yield the response part of the JSON
-                        }
-                    } catch (e) {
-                        // If it's not complete JSON yet, do nothing
-                    }
-                    chunk = chunk.substring(result.index + result[0].length);
-                    reassembledString = "";
-                    result = chunk.match(re);
-                }
-
-                reassembledString += chunk;
-                // Read the next chunk
-                ({ value: chunk, done: readerDone } = await reader.read());
-                chunk = chunk ? new TextDecoder("utf-8").decode(chunk) : "";
-            }
-            // Once the stream is finished, try to parse any remaining text
-            if (reassembledString) {
-                try {
-                    const json = JSON.parse(reassembledString);
-                    if (json.response) {
-                        yield json.response; // Yield the response part of the JSON
-                    }
-                } catch (e) {
-                    // Handle incomplete or empty JSON
-                }
-            }
-        }
-
-
-        function sendMessage() {
-            var message = document.getElementById("message").value;
-            if (message.trim() === '') {
-                return false;
-            }
-            appendMessage("user", message);
-            document.getElementById("message").value = '';
-
-            fetch("http://localhost:8080/chatbot", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ "text": message, "history": conversationHistory }),
-            })
-                .then(async (response) => {
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    } else {
-                        // Since we want to append text to the same message element, we need to get that element
-                        let lastMessageElement;
-                        for await (const chunk of streamGenerator(response)) {
-                            if (!lastMessageElement) {
-                                lastMessageElement = appendMessage("bot", chunk, true); // Pass true to indicate that this is a streaming message
-                            } else {
-                                lastMessageElement.textContent += chunk;
-                            }
-                            // Make sure we scroll to the bottom each time new text is added
-                            var chatContainer = document.getElementById("chat-container");
-                            chatContainer.scrollTop = chatContainer.scrollHeight;
-                        }
-                    }
-                })
-                .catch((error) => {
-                    console.error('Fetch error:', error);
-                });
-        }
-
-        var conversationHistory = [];
-
-        function appendMessage(sender, message, isStream = false) {
-            var chatContainer = document.getElementById("chat-container");
-            var messageDiv = document.createElement("div");
-            messageDiv.classList.add("message", sender);
-
-            // If it's part of a stream, don't add the text content yet
-            if (!isStream) {
-                messageDiv.textContent = message;
-            }
-
-            chatContainer.appendChild(messageDiv);
-            chatContainer.scrollTop = chatContainer.scrollHeight;
-
-            return messageDiv; // Return the element so we can keep appending text to it
-        }
-    </script>
 </head>
 
 <body>
+    <div>
+        <div id="chat-container"></div>
 
-    <div id="chat-container"></div>
+        <div id="user-input">
+            <input type="text" id="message" placeholder="Type a message..." />
+            <button onclick="sendMessage()">Send</button>
 
-    <div id="user-input">
-        <input type="text" id="message" placeholder="Type a message..." />
-        <button onclick="sendMessage()">Send</button>
+        </div>
     </div>
-
+    <script src="chatbot.js"></script>
 </body>
 
 </html>
