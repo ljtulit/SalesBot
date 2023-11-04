@@ -9,15 +9,19 @@
 </head>
 
 <body>
-    <div>
-        <div id="chat-container"></div>
+    <button id="chat-toggle" onclick="toggleChat()">Chat</button>
+
+    <div class="assistant-container" id="assistant-container">
+        <div id="chat-container">
+
+        </div>
 
         <div id="user-input">
             <input type="text" id="message" placeholder="Type a message..." />
             <button onclick="sendMessage()">Send</button>
-
         </div>
     </div>
+
     <script src="chatbot.js"></script>
 </body>
 
