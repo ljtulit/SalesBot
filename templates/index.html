@@ -9,9 +9,12 @@
 </head>
 
 <body>
-    <button id="chat-toggle" onclick="toggleChat()">Chat</button>
+    <button id="open-chat" onclick="openChat()">Chat</button>
 
     <div class="assistant-container" id="assistant-container">
+        <div class="chat-header">
+            <button class="close-chat" onclick="closeChat()"></button>
+        </div>
         <div id="chat-container">
 
         </div>

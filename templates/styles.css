@@ -9,25 +9,47 @@ body, html {
 
 /* Assistant popup styles */
 .assistant-container {
+    display: none;
     position: fixed;
     bottom: 0;
-    right: 0;
-    width: 300px;
-    height: 400px;
+    left: 0;
+    width: 500px;
+    height: 700px;
     display: flex;
     flex-direction: column;
-    background-color: #0056b3;
-    border-radius: 10px 10px 0 0;
+    background-color: #acd0f6;
+    border-radius: 10px;
     box-shadow: 0 -5px 15px rgba(0,0,0,.08);
     transform: translateY(calc(100% + 60px)); /* Show just the tip of the popup */
     transition: transform 0.5s ease;
     z-index: 1000;
-    
+    margin-left: 10px;
+    margin-bottom: 10px;
 }
 /* Show the chat container */
 .assistant-container.active {
     transform: translateY(0);
 }
+
+.chat-header {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    
+    background-color: #96c8fd;
+    border-radius: 10px 10px 0 0;
+}
+
+.close-chat {
+    width: 30px;
+    height: 30px;
+    cursor: pointer;     /* Changes the cursor to indicate it's clickable */
+    border: none;        /* Removes the border */
+    outline: none;       /* Removes the outline to prevent a box showing on focus (you should provide a focus style for accessibility) */
+    
+    background-color: red;/* Add any additional styles you want for your button here, such as padding, size, background-image, etc. */
+}
+
 
 #chat-container {
     flex-grow: 1;
@@ -46,16 +68,16 @@ body, html {
 }
 
 .message {
-    max-width: 75%;
+    max-width: calc(100% - 20px); /* Subtract total horizontal margins from 100% width */
     width: max-content;
-    margin: 5%;
+    margin: 10px; /* Vertical margins remain 10px, horizontal margins set to 'auto' to center */
     padding: 12px 20px;
     border-radius: 20px;
     position: relative;
     font-size: 0.9em;
     background-color: red;
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
 }
-
 .user {
     color: #fff;
     background-color: #007bff;
@@ -74,7 +96,8 @@ body, html {
     bottom: 0;
     width: 100%;
     display: flex;
-    background-color: blueviolet;
+    background-color: #9ebee2;
+    border-radius: 0 0 10px 10px;
 }
 
 #message {
@@ -84,13 +107,11 @@ body, html {
     margin: 10px;
     border-radius: 20px;
     outline: none;
-    
 }
 
 button {
     background-color: #007bff;
     color: white;
-    padding: 10px 20px;
     margin: 10px;
     border: none;
     border-radius: 20px;
@@ -118,7 +139,8 @@ button:hover {
 #chat-box::-webkit-scrollbar-thumb:hover {
     background: #555; 
 }
-#chat-toggle {
+#open-chat {
+    display: none;
     position: fixed;
     bottom: 20px;
     right: 20px;
@@ -132,16 +154,16 @@ button:hover {
     border: none;
     cursor: pointer;
     outline: none;
-    display: flex;
     justify-content: center;
     align-items: center;
     font-size: 24px;
 }
 
-#chat-toggle:hover {
+#open-chat:hover {
     background-color: #0056b3;
 }
 
-#chat-toggle.active {
-    opacity: 0;
+#open-chat.active {
+    display: flex;
+    transition: transform 0.5s ease;
 }

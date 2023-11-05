@@ -112,15 +112,23 @@ function sendMessage() {
 
 // Event listener for DOMContentLoaded to set up the chat interface
 document.addEventListener('DOMContentLoaded', (event) => {
-    document.getElementById('chat-toggle').addEventListener('click', toggleChat);
-    // Uncomment if you want to initialize with the chat open
-    toggleChat();
+    document.getElementById('open-chat').addEventListener('click', openChat);
+
+    openChat()
 });
 
-// Function to show/hide the chat interface
-function toggleChat() {
+function openChat() {
     var assistantContainer = document.getElementById('assistant-container');
-    var chatToggle = document.getElementById('chat-toggle');
-    assistantContainer.classList.toggle('active');
-    chatToggle.classList.toggle('active');
+    var openChat = document.getElementById('open-chat');
+
+    assistantContainer.classList.add('active');
+    openChat.classList.remove('active');
+}
+
+function closeChat() {
+    var assistantContainer = document.getElementById('assistant-container');
+    var openChat = document.getElementById('open-chat');
+
+    assistantContainer.classList.remove('active');
+    openChat.classList.add('active');
 }
