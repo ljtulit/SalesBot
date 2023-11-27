@@ -1,10 +1,11 @@
 import os
 import openai
 
+
 API_KEY = os.getenv('OPENAI_API_KEY')
 
 # Make sure to initialize the OpenAI key
-openai.api_key = API_KEY
+
 
 def compose_conversation(history, new_message, system_message=None):
     # Prepend system message to history if provided
@@ -24,17 +25,20 @@ def generate_chat_response(conversation):
     updated_conversation = compose_conversation(conversation, '', system_message)
 
     # Use OpenAI API to generate a response based on the full conversation
-    print(f"Sending conversation to OpenAI: {updated_conversation}")
-    response = openai.ChatCompletion.create(
-        model="gpt-4",
-        messages=updated_conversation,
-        stream=True,
-    )
-    
-    for message in response:
-        if 'content' in message.choices[0].delta:
-            yield message.choices[0].delta.content
-        elif 'finish_reason' in message.choices[0] and message.choices[0]['finish_reason'] == 'stop':
-            break  # Stop iterating when the model has finished generating tokens
-        else:
-            print(f"Unexpected response: {message}")
+    #print(f"Sending conversation to OpenAI: {updated_conversation}")
+    response = openai.chat.completions.create(model="gpt-4",
+    messages=updated_conversation,
+    stream=True)
+    try:
+        #print("Response from OpenAI: ", response)
+        for message in response:
+            print("Message: ", message.choices[0].delta.content)
+            if message.choices[0].delta.content != None:
+                yield message.choices[0].delta.content
+                pass
+
+            #yield "Sorry, I'm having trouble understanding you right now. Please try again later."
+            
+    except:
+        print("Error: ", response)
+        yield "Sorry, I'm having trouble understanding you right now. Please try again later."

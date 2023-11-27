@@ -12,7 +12,6 @@ HEADERS = {'Content-Type': 'application/json'}
 
 conversation_history = []
 
-
 def get_user_input():
     while True:
         text = input('\n\nUSER: ')

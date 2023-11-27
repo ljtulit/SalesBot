@@ -8,18 +8,17 @@ import logging
 logging.basicConfig(level=logging.INFO)
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/chatbot": {"origins": "*"}})
 
 @app.route('/chatbot', methods=['POST'])
 def chat():
+    print("test")
     data = request.json
     conversation = data.get('messages', [])  # Expecting 'messages' from the client
     
-    logging.info(f"Conversation so far: {conversation}")
+    #logging.info(f"Conversation so far: {conversation}")
 
     def generate():
-        # Assuming 'generate_chat_response' is a generator function.
-        # It should handle the conversation history and generate responses.
         for response in generate_chat_response(conversation):
             logging.info(f"Generated response: {response}")
             # Yield each response chunk
